@@ -16,7 +16,9 @@
   "scripts": {
     "dev": "nodemon --exec ts-node src/app.ts",
     "table:generate": "npx prisma db push",
-    "show:gui": "npx prisma studio"
+    "show:gui": "npx prisma studio",
+    "build": "tsc",
+    "start": "NODE_ENV=production node dist/app.js"
   },
   "dependencies": {
     "@prisma/client": "4.10.1",
