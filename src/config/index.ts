@@ -3,12 +3,6 @@ import { Algorithm } from "jsonwebtoken";
 
 const envFound = dotenv.config();
 
-console.info(process.env);
-
-if (envFound.error) {
-  throw new Error("Couldn't find .env file");
-}
-
 interface ConfigType {
   port: string;
   jwt: {
