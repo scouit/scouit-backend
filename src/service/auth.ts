@@ -46,7 +46,7 @@ export class AuthService {
       throw new ErrorResponse(commonError.unauthorized);
     }
 
-    const tokens = this.JWTHelper.generateJwtTokens({ userId: user.email });
+    const tokens = this.JWTHelper.generateJwtTokens({ userId: user.id });
     return tokens;
   };
 }

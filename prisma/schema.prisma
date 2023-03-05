@@ -8,74 +8,78 @@ datasource db {
 }
 
 model User {
+  id        Int @id @default(autoincrement())
   email     String @unique
   name      String    
   password  String
   introduce Introduce?
   activity  Activity[]
-  basic Basic?
-  project Project[]
+  basic     Basic?
   workExprience WorkExprience[]
   technology Technology?
   education Education[]
+  projects Project[]
 }
 
 model Introduce {
-  email   String @unique
+  id      Int    @id  @default(autoincrement())
   simple  String
   complex String
-  user    User   @relation(fields: [email], references: [email])
+  user    User   @relation(fields: [userId], references: [id])
+  userId  Int    @unique
 }
 
 model Activity {
-  order   Int    @id @default(autoincrement())
-  email   String
+  order   Int    @id 
   name    String 
   content String
   period  String
-  user    User   @relation(fields: [email], references: [email])
+  user    User   @relation(fields: [userId], references: [id])
+  userId  Int    @unique
 }
 
 model Project {
-  order     Int    @id @default(autoincrement())
-  email     String
+  order     Int @id 
   name      String
-  introduce String
+  introduce String 
   period    String
   url       String
   works     String
   skills    String
   images    String
-  user    User   @relation(fields: [email], references: [email])
+  userProfile      User   @relation(fields: [userProfileId], references: [id])
+  userProfileId    Int    
 }
 
 model Basic {
-  email String @unique
-  role  String
-  user    User   @relation(fields: [email], references: [email])
+  id      Int    @id     @default(autoincrement())
+  role    String
+  user    User   @relation(fields: [userId], references: [id])
+  userId  Int    @unique
 }
 
 model WorkExprience {
-  order  Int    @id @default(autoincrement())
-  email  String 
-  name   String
-  period String
-  role   String
-  works  String
-  user    User   @relation(fields: [email], references: [email])
+  order   Int     @id
+  name    String
+  period  String
+  role    String
+  works   String
+  user    User    @relation(fields: [userId], references: [id])
+  userId  Int
 }
 
 model Technology {
-  email String @unique
-  main  String
-  sub   String
-  user    User   @relation(fields: [email], references: [email])
+  id      Int     @id  @default(autoincrement())
+  main    String
+  sub     String
+  user    User    @relation(fields: [userId], references: [id])
+  userId  Int     @unique
 }
 
 model Education {
-  order  Int    @id @default(autoincrement())
-  email  String
+  order  Int    @id 
   name   String
   period String
-  user    User   @relation(fields: [email], references: [email])
+  user   User   @relation(fields: [userId], references: [id])
+  userId Int
 }

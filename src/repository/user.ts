@@ -17,7 +17,6 @@ export class UserRepository {
     const findUserRecord = await prisma.user.findFirst({
       where: { email: userId },
     });
-    console.info(findUserRecord);
     return findUserRecord;
   };
   getUserProfile = async () => {};

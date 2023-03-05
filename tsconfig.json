@@ -15,6 +15,6 @@
     "forceConsistentCasingInFileNames": true,
     "strictPropertyInitialization": false
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "prisma/**/*.prisma"],
   "exclude": ["node_modules"]
 }

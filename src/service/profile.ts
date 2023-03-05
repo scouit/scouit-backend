@@ -15,7 +15,7 @@ export class ProfileService {
 
   write = async (
     type: QueryProfileWriteType,
-    userId: string,
+    userId: number,
     body: PatchProfileWriteRequestType
   ) => {
     switch (type) {
@@ -69,7 +69,7 @@ export class ProfileService {
     }
   };
 
-  getById = async (userId: string) => {
+  getById = async (userId: number) => {
     const userProfile = await this.profileRepository.findByUserId(userId);
     return userProfile;
   };

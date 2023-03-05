@@ -20,7 +20,7 @@ export const createUser = async (
   }
 };
 
-export const handlerSignIn = async (
+export const signIn = async (
   req: Request<{}, {}, PostSignInReqeustType>,
   res: Response,
   next: NextFunction

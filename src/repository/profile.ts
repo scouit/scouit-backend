@@ -14,9 +14,9 @@ import { ErrorResponse } from "../utils/error-res";
 const prisma = new PrismaClient();
 
 export class ProfileRepository {
-  findByUserId = async (userId: string) => {
+  findByUserId = async (userId: number) => {
     const userRecord = await prisma.user.findUnique({
-      where: { email: userId },
+      where: { id: userId },
       include: {
         introduce: true,
         activity: true,
@@ -24,93 +24,80 @@ export class ProfileRepository {
         education: true,
         technology: true,
         workExprience: true,
+        projects: true,
       },
     });
     return userRecord;
   };
 
-  activityUserProfile = async (userId: string, activity: ActivityType[]) => {
+  activityUserProfile = async (userId: number, activity: ActivityType[]) => {
     if (!activity) {
       throw new ErrorResponse(commonError.badRequest);
     }
-
-    // await Promise.all(
-    //   activity.map(
-    //     async ({ name, content = "", period }) =>
-    //       await prisma.activity.upsert({
-    //         where: { email: userId },
-    //         create: {
-    //           email: userId,
-    //           name,
-    //           content,
-    //           period,
-    //         },
-    //         update: {
-    //           email: userId,
-    //           name,
-    //           content,
-    //           period,
-    //         },
-    //       })
-    //   )
-    // );
   };
 
-  educationUserProfile = async (userId: string, education: EducationType[]) => {
+  educationUserProfile = async (userId: number, education: EducationType[]) => {
     if (!education) {
       throw new ErrorResponse(commonError.badRequest);
     }
 
-    // await Promise.all(
-    //   education.map(
-    //     async ({ name, period }) =>
-    //       await prisma.education.upsert({
-    //         where: { email: userId },
-    //         create: {
-    //           email: userId,
-    //           name,
-    //           period,
-    //         },
-    //         update: {
-    //           email: userId,
-    //           name,
-    //           period,
-    //         },
-    //       })
-    //   )
-    // );
+    await Promise.all(
+      education.map(
+        async ({ name, period }, idx) =>
+          await prisma.education.upsert({
+            where: { order: idx },
+            create: {
+              userId,
+              order: idx,
+              name,
+              period,
+            },
+            update: {
+              name,
+              period,
+            },
+          })
+      )
+    );
   };
 
-  projectUserProfile = async (userId: string, proejct: ProjectType[]) => {
+  projectUserProfile = async (userId: number, proejct: ProjectType[]) => {
     if (!proejct) {
       throw new ErrorResponse(commonError.badRequest);
     }
 
-    // await Promise.all(
-    //   proejct.map(
-    //     async ({ name, period, introduce = "", url }) =>
-    //       await prisma.project.upsert({
-    //         where: { email: userId },
-    //         create: {
-    //           email: userId,
-    //           name,
-    //           period,
-    //           introduce,
-    //           url: JSON.stringify(url),
-    //         },
-    //         update: {
-    //           email: userId,
-    //           name,
-    //           period,
-    //           introduce,
-    //           url: JSON.stringify(url),
-    //         },
-    //       })
-    //   )
-    // );
+    await Promise.all(
+      proejct.map(
+        async ({ name, period, introduce = "", url }, idx) =>
+          await prisma.project.upsert({
+            where: { order: idx },
+            create: {
+              userProfileId: userId,
+              order: idx,
+              name,
+              period,
+              introduce,
+              works: "",
+              skills: "",
+              images: "",
+              url: JSON.stringify(url),
+            },
+            update: {
+              name,
+              order: idx,
+              period,
+              introduce,
+              works: "",
+              skills: "",
+              images: "",
+              url: JSON.stringify(url),
+            },
+          })
+      )
+    );
   };
 
-  introduceUserProfile = async (userId: string, introduce: IntroduceType) => {
+  introduceUserProfile = async (userId: number, introduce: IntroduceType) => {
     const { complex, simple } = introduce;
     if (!complex) {
       throw new ErrorResponse(commonError.badRequest);
@@ -121,14 +108,14 @@ export class ProfileRepository {
     }
 
     await prisma.introduce.upsert({
-      where: { email: userId },
+      where: { userId },
       create: {
-        email: userId,
+        userId,
         simple,
         complex,
       },
       update: {
-        email: userId,
+        userId,
         simple,
         complex,
       },
@@ -136,40 +123,50 @@ export class ProfileRepository {
   };
 
   workExprienceProfile = async (
-    userId: string,
+    userId: number,
     workExperiences: WorkExperienceType[]
   ) => {
-    workExperiences.map(async (workExperience) => ({
-      ...workExperience,
-      email: userId,
-      role: JSON.stringify(workExperience.role),
-      works: JSON.stringify(workExperience.works),
-    }));
-
-    // await prisma.workExprience.createMany({
-    //   data: workExperiences,
-    //   skipDuplicates: true,
-    // });
+    workExperiences.map(
+      async (workExperience, idx) =>
+        await prisma.workExprience.upsert({
+          where: {
+            order: idx,
+          },
+          create: {
+            ...workExperience,
+            userId,
+            order: idx,
+            role: JSON.stringify(workExperience.role),
+            works: JSON.stringify(workExperience.works),
+          },
+          update: {
+            ...workExperience,
+            userId,
+            order: idx,
+            role: JSON.stringify(workExperience.role),
+            works: JSON.stringify(workExperience.works),
+          },
+        })
+    );
   };
 
-  basicProfile = async (userId: string, { role }: BasicType) => {
-    if (!role) {
+  basicProfile = async (userId: number, basic: BasicType) => {
+    if (!basic.role) {
       throw new ErrorResponse(commonError.badRequest);
     }
     await prisma.basic.upsert({
-      where: { email: userId },
+      where: { userId },
       create: {
-        email: userId,
-        role,
+        userId,
+        role: basic.role,
       },
       update: {
-        email: userId,
-        role,
+        role: basic.role,
       },
     });
   };
 
-  technologyProfile = async (userId: string, { main, sub }: TechnologyType) => {
+  technologyProfile = async (userId: number, { main, sub }: TechnologyType) => {
     if (!main) {
       throw new ErrorResponse(commonError.badRequest);
     }
@@ -180,14 +177,14 @@ export class ProfileRepository {
     const JSONsub = JSON.stringify(sub);
 
     await prisma.technology.upsert({
-      where: { email: userId },
+      where: { userId },
       create: {
-        email: userId,
+        userId,
         main: JSONmain,
         sub: JSONsub,
       },
       update: {
-        email: userId,
+        userId,
         main: JSONmain,
         sub: JSONsub,
       },
