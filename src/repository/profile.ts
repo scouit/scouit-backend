@@ -7,11 +7,19 @@ import {
   TechnologyType,
   BasicType,
   IntroduceType,
+  QueryProfileWriteType,
 } from "@scouit/api-types";
 import { commonError } from "../constants/error";
 import { ErrorResponse } from "../utils/error-res";
 
 const prisma = new PrismaClient();
+
+type Query = "activity";
+
+interface P {
+  query: Query;
+  where: any;
+}
 
 export class ProfileRepository {
   findByUserId = async (userId: number) => {
@@ -188,6 +196,14 @@ export class ProfileRepository {
         main: JSONmain,
         sub: JSONsub,
       },
+    });
+  };
+
+  write = async ({ query, where }: P) => {
+    await prisma[query].upsert({
+      where: where,
+      create: {},
+      update: {},
     });
   };
 }

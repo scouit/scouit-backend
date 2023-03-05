@@ -18,6 +18,7 @@ export class ProfileService {
     userId: number,
     body: PatchProfileWriteRequestType
   ) => {
+    this.profileRepository.write({ query: type });
     switch (type) {
       case "activity":
         if (!body.activity) {
