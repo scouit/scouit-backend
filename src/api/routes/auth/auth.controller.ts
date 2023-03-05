@@ -28,8 +28,8 @@ export const signIn = async (
   try {
     const userInfo = req.body;
     const authInstance = new AuthService();
-    const { access, refresh } = await authInstance.signIn(userInfo);
-    res.json({ access, refresh });
+    const { access_token, refresh_token } = await authInstance.signIn(userInfo);
+    res.json({ access_token, refresh_token });
   } catch (e) {
     next(e);
   }

@@ -42,13 +42,13 @@ export class JWTHelper {
   }
 
   generateJwtTokens(payload: OwnJwtPayload): {
-    access: string;
-    refresh: string;
+    access_token: string;
+    refresh_token: string;
   } {
-    const access = this.generateAccessToken(payload);
-    const refresh = this.generateRefreshToken(payload);
+    const access_token = this.generateAccessToken(payload);
+    const refresh_token = this.generateRefreshToken(payload);
 
-    return { access, refresh };
+    return { access_token, refresh_token };
   }
 
   decodeJwtToken(token: string, subject?: string) {
