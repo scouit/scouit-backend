@@ -18,7 +18,7 @@ export class ProfileService {
     userId: number,
     body: PatchProfileWriteRequestType
   ) => {
-    this.profileRepository.write({ query: type });
+    // this.profileRepository.write({ query: type });
     switch (type) {
       case "activity":
         if (!body.activity) {
@@ -72,6 +72,14 @@ export class ProfileService {
 
   getById = async (userId: number) => {
     const userProfile = await this.profileRepository.findByUserId(userId);
-    return userProfile;
+    return {
+      introduce: userProfile?.introduce,
+      activity: userProfile?.activity,
+      project: userProfile?.projects,
+      technology: userProfile?.technology,
+      education: userProfile?.education,
+      basic: userProfile?.basic,
+      workExprience: userProfile?.workExprience,
+    };
   };
 }

@@ -199,11 +199,11 @@ export class ProfileRepository {
     });
   };
 
-  write = async ({ query, where }: P) => {
-    await prisma[query].upsert({
-      where: where,
-      create: {},
-      update: {},
-    });
-  };
+  // write = async ({ query, where }: P) => {
+  //   await prisma[query].upsert({
+  //     where: where,
+  //     create: {},
+  //     update: {},
+  //   });
+  // };
 }
